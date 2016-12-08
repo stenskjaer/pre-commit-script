@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <teiHeader>
+    <fileDesc>
+      <editionStmt>
+        <edition n="2015.08">
+          <title>Distinctio 3 q. un. [Vatican Transcription]</title>
+          <date when="2015-08-24">May 19 2015</date>
+        </edition>
+      </editionStmt>
+      <publicationStmt>
+        <authority>An SCTA Project</authority>
+        <availability status="free">
+          <p>Published under a <ref target="http://creativecommons.org/licenses/by-nc-nd/3.0/"
+          >Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License</ref></p>
+        </availability>
+      </publicationStmt>
+      <sourceDesc>
+        <listWit>
+          <witness xml:id="V" n="vatlat955">Vatican Library, Cod. Vat. lat. 955</witness>
+        </listWit>
+      </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <schemaRef n="lbp-diplomatic-1.0.0"
+                 target="https://raw.githubusercontent.com/lombardpress/lombardpress-schema/develop/src/1.0/out/diplomatic.rng"/>
+      <editorialDecl>
+        <p>Encoding of this text has followed the recommendations of the LombardPress 1.0.0
+        guidelines for a diplomatic edition.</p>
+      </editorialDecl>
+    </encodingDesc>
+    <revisionDesc status="draft">
+      <listChange>
+        <change when="2015-08-24" status="draft" n="0.0.0">
+          <p>Created file for the first time.</p>
+        </change>
+      </listChange>
+    </revisionDesc>
+  </teiHeader>
+  <text xml:lang="la">
+    <front>
+      <div xml:id="includeList">
+        <xi:include
+          href="https://bitbucket.org/lombardpress/lombardpress-lists/raw/master/workscited.xml"
+          xpointer="worksCited"/>
+        <xi:include
+          href="https://bitbucket.org/lombardpress/lombardpress-lists/raw/master/Prosopography.xml"
+          xpointer="prosopography"/>
+      </div>
+      <div xml:id="starts-on">
+        <pb ed="#V" facs="V106" n="106-r" />
+        <!-- #V has only one column -->
+      </div>
+    </front>
+    <body>
+      <div xml:id="b1-d3-qun">
+        <head type="title">Distinctio 3</head>
+        <div xml:id="b1d3qun-Dquuvet">
+          <head xml:id="b1d3qun-Hquuvet">Quaestio unica: Utrum mens humana sit imago trinitatis increatae sicut vestigium eiusdem trinitatis</head>
+          <div>
+            <!--This question begins near the top of p106v = p212, l.12. Numbered by folio and page.-->
+            <p xml:id="b1d3qun-cdtvet"><pb ed="#V" n="106v"/>Circa distinctionem tertiam quaero utrum mens humana sit  imago trinitatis increatae sicut in rebus aliis factis propter hominem
+            <lb ed="#V" n="13"/>est vestigium eiusdem trinitatis
+            </p>
+          </div>
+          <div xml:id="b1d3qun-Drprprp" type="rationes-principales">
+            <head>Rationes principales</head>
+            <p xml:id="b1d3qun-qnveid">quod non videtur quia secundum <name ref="#Augustine">augustinum</name> in <ref><title>sermone communi de uno martyre</title></ref> <quote>si servasset <add place="margin">inquit</add>
+            <lb ed="#V" n="14"/>in se homo bonum quod in illo <add place="margin">creavit deus id est imaginem suam semper laudaret deum non solum lingua sed et vita</add></quote> <del>etc.</del> igitur ex opposito non sic laudat igitur non servat in se bonum illud scilicet
+            <lb ed="#V" n="15"/>imaginem dei et tamen servat mentem suam igitur mens humana non est  imago dei
+            </p>
+            <p xml:id="b1d3qun-idteit"><pc ana="#pilcrow"/>Item <ref>14 <title ref="#deTrinitate">de trinitate</title> c. 7 de parvis</ref>
+            <lb ed="#V" n="16"/>dicit iuxta illud psalmum <quote>verumtamen in imagine pertransit homo quod <hi rend="underline">haec  imago ita deformis et obscura facta est ut penae
+            <lb ed="#V" n="17"/>nulla sit</hi></quote> Ipsa <del>quod</del> <add place="above-line">autem</add> mens humana secundum substantiam suam integre manet igitur secundum substantiam suam non est  imago trinitatis
+            </p>
+            <p xml:id="b1d3qun-immnsm"><lb ed="#V" n="18"/><pc ana="#pilcrow"/>Item tunc mens magis esset  imago dei quam homo quia unumquodque propter quod et illud magis Consequens falsum quia homo magis est
+            <lb ed="#V" n="19"/>similis deo quam mens et exprimitur ab eo igitur magis est eius  imago haec consequentia patet per distinctionem imaginis quam ponit <ref><name ref="#Augustine">augustinus</name>
+            <lb ed="#V" n="20"/><title ref="deDiversisQuaestionibus">De 83 quaestionibus</title> quaestione 74</ref> ubi dicit quod  imago est expressa similitudo illius cuius est  imago assumptum probatur quia homo est ens nobilius
+            <lb ed="#V" n="21"/>quam mens hominis igitur est magis similis deo <add place="margin">quam eius mens</add> Consequentia patet per <ref><name ref="#Anselm">Anselmum</name> <title ref="#Monologion">Monologion</title> c. 31 et 66</ref> ubi dicit <name>Anselmus</name> <hi rend="underline"><quote>quidquid inter crea<lb ed="#V" n="22"/>ta constat</quote> deo <quote>esse similius illud necesse est esse <!--this should be an "ex", not an "esse"--> natura praestantius</quote></hi> assumptum probatur quia <ref>primus <title ref="#Ethics">Ethicorum</title> c. 8 in fine dicit <name ref="#Aristotle">Philosophus</name></ref>
+            <lb ed="#V" n="23"/><hi rend="underline">quod <quote>felicitas connumerata cum minimo bonorum est eligibilior quam ipsa felicitas</quote></hi> et addit <hi rend="underline">quod <quote>semper maius bonum est
+            <lb ed="#V" n="24"/>eligibilius</quote></hi> Igitur <unclear>pari ratione</unclear> mens humana cum quocumque bono est melior quam ipsa solitaria Igitur compositum ex ipsa mente et corpore
+            <lb ed="#V" n="25"/>scilicet homo est nobilius sola mente
+            </p>
+            <p xml:id="b1d3qun-ismnrd"><lb ed="#V"/><pc ana="#pilcrow"/>Item si mens humana sit  imago trinitatis increatae igitur aut ratione substantiae suae
+            <lb ed="#V" n="26"/>et hoc non quia illa non repraesentat distinctionem personarum aut ratione actuum quos causat et recipit et hoc quia illi non sunt
+            <lb ed="#V" n="27"/>consubstantiales et hoc idem quia in re arguitur sub alia forma sic si sic tunc cognitio perfecta illius imaginis nata esset indu<lb ed="#V" n="28"/>cere
+            vel saltem iuvare <add place="margin-left">ad cognoscendum</add> trinitatem esse in deo
+            consequens falsum quia eius cognitio non magis abducit a cognitione vera ipsius trinitatis
+            <!-- line breaks unclear here -->
+            <!-- where is line n-28 -->
+            <lb ed="#V" n="29"/>increatae
+            probo sive enim in anima sit realis distinctio probo sive enim in anima sit realis distinctio potentiarum sive non videtur abducere
+            sive non videtur abducere Si enim sic tunc sunt diversae res
+            <lb ed="#V" n="30"/>et per consequens vel sunt partes mentis vel accidentia in ipsa et ita ista cognitio faceret aestimare quod personae essent partes
+            <lb ed="#V" n="31"/>dei vel accidentia in eo et ita <add place="above-line">quod</add> non deus Si non tunc faceret aestimare personas non realiter distingui
+            </p>
+            <p xml:id="b1d3qun-isqati"><lb ed="#V"/><pc ana="#pilcrow"/>Item specialiter quod mens
+            <lb ed="#V" n="32"/>non sit imago ratione suorum accidentium quia <ref>14 <title ref="#deTrinitate">de trinitate</title> c. 6 de parvis dicit <name ref="#Augustine">augustinus</name></ref> quod <quote> imago creatoris immortaliter <add place="margin-right">inserta</add>
+            <lb ed="#V" n="33"/><del>inserta</del> est animae hominis rationali seu intellectuali sed actus non immortaliter</quote> igitur Et ibidem etiam <ref>c. 4 vult <name ref="#Augustine">augustinus</name></ref>
+            <lb ed="#V" n="34"/>quod  imago illa non est attendenda in rebus transeuntibus sed actus transeunt igitur
+            </p>
+          </div>
+        </div>
+      </div>
+    </body>
+  </text>
+</TEI>
