@@ -1,0 +1,125 @@
+#!/usr/bin/env python
+"""
+This pre-commit script is designed to handle a range of different tests and
+post-processing of staged material. Testing and processing is run on files in
+accordance with specifications of include and exclude-lists and gives
+actionable feedback to the user when tests do not succeed.
+
+Currently the script only handles post-processing of XML-files (indentation and
+whitespace).
+
+The available properties of a check are the following:
+- output: The information printed to the commit log during processing.
+- command: The command performing the test or processing.
+- editing_command: If the command makes changes to the files, this should be set
+  to True for the changes to be staged befor commit.
+- match_files: Regex of the filenames to match.
+- ignore_files: Regex of the filenames to ignore.
+- print_filename: If True, the log messages will print the names of the files in
+  case of errors.
+
+The script requires emacs (>= 17) to run whitespace checks and processing.
+
+The script is based on https://dzone.com/articles/why-your-need-git-pre-commit
+"""
+
+import os
+import re
+import subprocess
+import sys
+
+modified = re.compile('^(?:M|A)(\s+)(?P<name>.*)')
+
+CHECKS = [
+    {
+        'output': 'Checking whitespace...',
+        'command': 'emacs %s --batch -l pre-commit-setup.el &> /dev/null',
+        'editing_command': True,
+        'match_files': ['.*\.xml$'],
+        'print_filename': True,
+    },
+    # {
+    #     'output': 'Checking for print statements...',
+    #     'command': 'grep -n print %s',
+    #     'match_files': ['.*\.py$'],
+    #     'ignore_files': ['.*migrations.*', '.*management/commands.*', '.*manage.py', '.*/scripts/.*'],
+    #     'print_filename': True,
+    # },
+    # {
+    #     'output': 'Running pep8...',
+    #     'command': 'pep8 -r --ignore=E501,W293 %s',
+    #     'match_files': ['.*\.py$'],
+    #     'ignore_files': ['.*migrations.*'],
+    #     'print_filename': False,
+    # },
+]
+
+
+def matches_file(file_name, match_files):
+    return any(re.compile(match_file).match(file_name) for match_file in match_files)
+
+
+def check_files(files, check):
+    result = 0
+    print check['output']
+    for file_name in files:
+        if not 'match_files' in check or matches_file(file_name, check['match_files']):
+            if not 'ignore_files' in check or not matches_file(file_name, check['ignore_files']):
+                process = subprocess.Popen(check['command'] % file_name, stdout=subprocess.PIPE,
+                                           stderr=subprocess.PIPE, shell=True)
+                out, err = process.communicate()
+                if out or err:
+                    if check['print_filename']:
+                        prefix = '\t%s:' % file_name
+                    else:
+                        prefix = '\t'
+                    output_lines = ['%s%s' % (prefix, line) for line in out.splitlines()]
+                    print '\n'.join(output_lines)
+                    if err:
+                        print err
+                        result = 1
+                if check['editing_command']:
+                    # As processing will create a conflict with the stashed
+                    # changes, we need to pop them before committing the
+                    # changes and stash them again after comitting.
+                    subprocess.call(['git', 'stash', 'pop', '-q'], stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
+                    subprocess.call(['git', 'add', file_name], stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
+                    subprocess.call(['git', 'stash', '-u', '--keep-index'], stdout=subprocess.PIPE)
+    return result
+
+
+def main(all_files):
+    # Stash all non-staged changes before we start.
+    subprocess.call(['git', 'stash', '-u', '--keep-index'], stdout=subprocess.PIPE)
+
+    files = []
+    if all_files:
+        for root, dirs, file_names in os.walk('.'):
+            for file_name in file_names:
+                files.append(os.path.join(root, file_name))
+    else:
+        p = subprocess.Popen(['git', 'status', '--porcelain'], stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        for line in out.splitlines():
+            match = modified.match(line)
+            if match:
+                files.append(match.group('name'))
+
+    result = 0
+
+    for check in CHECKS:
+        result = check_files(files, check) or result
+
+    # Pop the stashed changes
+    subprocess.call(['git', 'stash', 'pop', '-q'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    sys.exit(result)
+
+
+if __name__ == '__main__':
+    all_files = False
+    if len(sys.argv) > 1 and sys.argv[1] == '--all-files':
+        all_files = True
+    main(all_files)
