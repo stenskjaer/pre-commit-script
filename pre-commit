@@ -30,11 +30,61 @@ import sys
 
 modified = re.compile('^(?:M|A)(\s+)(?P<name>.*)')
 
+
+def check_xml_indentation(file_name):
+    """Check indentation of xml file by running emacs indent region function on
+    file and see if that changes anything. If it does, something is not
+    properly indented.
+    """
+
+    out = ""
+    err = ""
+
+    indentation_command = "emacs {0} --batch \
+                          --eval '(indent-region (point-min) (point-max) nil)' \
+                          --eval '(if (buffer-modified-p) (error (kill-emacs 1))(kill-emacs 0))' \
+                          &> /dev/null".format(file_name)
+    process = subprocess.call(indentation_command, shell=True)
+
+    if process == 1:
+        out = "One or more indentation errors."
+    return out, err
+
+
+def check_xml_whitespace(file_name):
+    """Check whitespace of xml file by running emacs whitespace-cleanup function on
+    file and see if that changes anything. If it does, there is at least one
+    whitespace error.
+
+    """
+    out = ""
+    err = ""
+
+    whitespace_command = "emacs {0} --batch \
+                         --eval '(setq indent-tabs-mode nil)' \
+                         --eval '(whitespace-cleanup)' \
+                         --eval '(if (buffer-modified-p) (error (kill-emacs 1))(kill-emacs 0))' \
+                         &> /dev/null".format(file_name)
+    process = subprocess.call(whitespace_command, shell=True)
+
+    if process == 1:
+        out = "One or more whitespace errors."
+    return out, err
+
+
+
 CHECKS = [
     {
+        'output': 'Checking indentation...',
+        'function': check_xml_indentation,
+        'editing_command': False,
+        'match_files': ['.*\.xml$'],
+        'print_filename': True,
+    },
+    {
         'output': 'Checking whitespace...',
-        'command': 'emacs %s --batch -l pre-commit-setup.el &> /dev/null',
-        'editing_command': True,
+        'function': check_xml_whitespace,
+        'editing_command': False,
         'match_files': ['.*\.xml$'],
         'print_filename': True,
     },
@@ -65,15 +115,18 @@ def check_files(files, check):
     for file_name in files:
         if not 'match_files' in check or matches_file(file_name, check['match_files']):
             if not 'ignore_files' in check or not matches_file(file_name, check['ignore_files']):
-                process = subprocess.Popen(check['command'] % file_name, stdout=subprocess.PIPE,
-                                           stderr=subprocess.PIPE, shell=True)
-                out, err = process.communicate()
+                if 'command' in check:
+                    process = subprocess.Popen(check['command'] % file_name, stdout=subprocess.PIPE,
+                                               stderr=subprocess.PIPE, shell=True)
+                    out, err = process.communicate()
+                elif 'function' in check:
+                    out, err = check['function'](file_name)
                 if out or err:
                     if check['print_filename']:
                         prefix = '\t%s:' % file_name
                     else:
                         prefix = '\t'
-                    output_lines = ['%s%s' % (prefix, line) for line in out.splitlines()]
+                    output_lines = ['%s %s' % (prefix, line) for line in out.splitlines()]
                     print '\n'.join(output_lines)
                     if err:
                         print err
