@@ -13,6 +13,7 @@ The available properties of a check are the following:
 - command: The command performing the test or processing.
 - editing_command: If the command makes changes to the files, this should be set
   to True for the changes to be staged befor commit.
+- function: A testing function specified in the script.
 - match_files: Regex of the filenames to match.
 - ignore_files: Regex of the filenames to ignore.
 - print_filename: If True, the log messages will print the names of the files in
@@ -47,7 +48,7 @@ def check_xml_indentation(file_name):
     process = subprocess.call(indentation_command, shell=True)
 
     if process == 1:
-        out = "One or more indentation errors."
+        err = "One or more indentation errors."
     return out, err
 
 
@@ -68,7 +69,7 @@ def check_xml_whitespace(file_name):
     process = subprocess.call(whitespace_command, shell=True)
 
     if process == 1:
-        out = "One or more whitespace errors."
+        err = "One or more whitespace errors."
     return out, err
 
 
@@ -127,10 +128,11 @@ def check_files(files, check):
                     else:
                         prefix = '\t'
                     output_lines = ['%s %s' % (prefix, line) for line in out.splitlines()]
-                    print '\n'.join(output_lines)
                     if err:
-                        print err
+                        output_lines = ['%s %s' % (prefix, line) for line in err.splitlines()]
                         result = 1
+                    if output_lines:
+                        print '\n'.join(output_lines)
                 if check['editing_command']:
                     # As processing will create a conflict with the stashed
                     # changes, we need to pop them before committing the
